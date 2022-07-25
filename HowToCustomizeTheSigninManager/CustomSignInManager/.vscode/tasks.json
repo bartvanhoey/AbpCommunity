@@ -1,0 +1,66 @@
+{
+   "version": "2.0.0",
+   "tasks": [
+       {
+           "label": "buildApi",
+           "command": "dotnet",
+           "type": "process",
+           "args": [
+               "build",
+               "${workspaceFolder}/src/CustomSignInManager.HttpApi.Host/CustomSignInManager.HttpApi.Host.csproj",
+               "/property:GenerateFullPaths=true",
+               "/consoleloggerparameters:NoSummary"
+           ],
+           "problemMatcher": "$msCompile"
+       },
+       {
+           "label": "buildIdentityServer",
+           "command": "dotnet",
+           "type": "process",
+           "args": [
+               "build",
+               "${workspaceFolder}/src/CustomSignInManager.IdentityServer/CustomSignInManager.IdentityServer.csproj",
+               "/property:GenerateFullPaths=true",
+               "/consoleloggerparameters:NoSummary"
+           ],
+           "problemMatcher": "$msCompile"
+       },
+       {
+           "label": "buildDbMigrator",
+           "command": "dotnet",
+           "type": "process",
+           "args": [
+               "build",
+               "${workspaceFolder}/src/CustomSignInManager.DbMigrator/CustomSignInManager.DbMigrator.csproj",
+               "/property:GenerateFullPaths=true",
+               "/consoleloggerparameters:NoSummary"
+           ],
+           "problemMatcher": "$msCompile"
+       },
+       {
+           "label": "publish",
+           "command": "dotnet",
+           "type": "process",
+           "args": [
+               "publish",
+               "${workspaceFolder}/src/CustomSignInManager.HttpApi.Host/CustomSignInManager.HttpApi.Host.csproj",
+               "/property:GenerateFullPaths=true",
+               "/consoleloggerparameters:NoSummary"
+           ],
+           "problemMatcher": "$msCompile"
+       },
+       {
+           "label": "watch",
+           "command": "dotnet",
+           "type": "process",
+           "args": [
+               "watch",
+               "run",
+               "${workspaceFolder}/src/CustomSignInManager.HttpApi.Host/CustomSignInManager.HttpApi.Host.csproj",
+               "/property:GenerateFullPaths=true",
+               "/consoleloggerparameters:NoSummary"
+           ],
+           "problemMatcher": "$msCompile"
+       }
+   ]
+}   
