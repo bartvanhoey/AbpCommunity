@@ -1,0 +1,23 @@
+{
+  "culture": "de-DE",
+  "texts": {
+    "Menu:Home": "Home",
+    "Welcome": "Willkommen",
+    "LongWelcomeMessage": "Willkommen bei der Anwendung. Dies ist ein Startup-Projekt, das auf dem ABP-Framework basiert. Weitere Informationen finden Sie unter abp.io.",
+    "Permission:Contact": "Contact",
+    "Permission:Create": "Create",
+    "Permission:Update": "Update",
+    "Permission:Delete": "Delete",
+    "Menu:Contact": "MenuContact",
+    "Contact": "Contact",
+    "ContactName": "ContactName",
+    "ContactPhoneNumber": "ContactPhoneNumber",
+    "ContactAddress": "ContactAddress",
+    "ContactAge": "ContactAge",
+    "ContactBirthDay": "ContactBirthDay",
+    "CreateContact": "CreateContact",
+    "EditContact": "EditContact",
+    "ContactDeletionConfirmationMessage": "Are you sure to delete the contact {0}?",
+    "SuccessfullyDeleted": "Successfully deleted"
+  }
+}
