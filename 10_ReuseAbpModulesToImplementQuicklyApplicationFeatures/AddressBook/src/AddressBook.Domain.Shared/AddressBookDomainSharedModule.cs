@@ -1,4 +1,5 @@
 ﻿using AddressBook.Localization;
+using EasyAbp.PrivateMessaging;
 using Volo.Abp.AuditLogging;
 using Volo.Abp.BackgroundJobs;
 using Volo.Abp.FeatureManagement;
@@ -13,46 +14,48 @@ using Volo.Abp.TenantManagement;
 using Volo.Abp.Validation.Localization;
 using Volo.Abp.VirtualFileSystem;
 
-namespace AddressBook;
-
-[DependsOn(
-    typeof(AbpAuditLoggingDomainSharedModule),
-    typeof(AbpBackgroundJobsDomainSharedModule),
-    typeof(AbpFeatureManagementDomainSharedModule),
-    typeof(AbpIdentityDomainSharedModule),
-    typeof(AbpIdentityServerDomainSharedModule),
-    typeof(AbpPermissionManagementDomainSharedModule),
-    typeof(AbpSettingManagementDomainSharedModule),
-    typeof(AbpTenantManagementDomainSharedModule)
-    )]
-public class AddressBookDomainSharedModule : AbpModule
+namespace AddressBook
 {
-    public override void PreConfigureServices(ServiceConfigurationContext context)
+    [DependsOn(
+        typeof(PrivateMessagingDomainSharedModule),
+        typeof(AbpAuditLoggingDomainSharedModule),
+        typeof(AbpBackgroundJobsDomainSharedModule),
+        typeof(AbpFeatureManagementDomainSharedModule),
+        typeof(AbpIdentityDomainSharedModule),
+        typeof(AbpIdentityServerDomainSharedModule),
+        typeof(AbpPermissionManagementDomainSharedModule),
+        typeof(AbpSettingManagementDomainSharedModule),
+        typeof(AbpTenantManagementDomainSharedModule)
+    )]
+    public class AddressBookDomainSharedModule : AbpModule
     {
-        AddressBookGlobalFeatureConfigurator.Configure();
-        AddressBookModuleExtensionConfigurator.Configure();
-    }
-
-    public override void ConfigureServices(ServiceConfigurationContext context)
-    {
-        Configure<AbpVirtualFileSystemOptions>(options =>
+        public override void PreConfigureServices(ServiceConfigurationContext context)
         {
-            options.FileSets.AddEmbedded<AddressBookDomainSharedModule>();
-        });
+            AddressBookGlobalFeatureConfigurator.Configure();
+            AddressBookModuleExtensionConfigurator.Configure();
+        }
 
-        Configure<AbpLocalizationOptions>(options =>
+        public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            options.Resources
-                .Add<AddressBookResource>("en")
-                .AddBaseTypes(typeof(AbpValidationResource))
-                .AddVirtualJson("/Localization/AddressBook");
+            Configure<AbpVirtualFileSystemOptions>(options =>
+            {
+                options.FileSets.AddEmbedded<AddressBookDomainSharedModule>();
+            });
 
-            options.DefaultResourceType = typeof(AddressBookResource);
-        });
+            Configure<AbpLocalizationOptions>(options =>
+            {
+                options.Resources
+                    .Add<AddressBookResource>("en")
+                    .AddBaseTypes(typeof(AbpValidationResource))
+                    .AddVirtualJson("/Localization/AddressBook");
 
-        Configure<AbpExceptionLocalizationOptions>(options =>
-        {
-            options.MapCodeNamespace("AddressBook", typeof(AddressBookResource));
-        });
+                options.DefaultResourceType = typeof(AddressBookResource);
+            });
+
+            Configure<AbpExceptionLocalizationOptions>(options =>
+            {
+                options.MapCodeNamespace("AddressBook", typeof(AddressBookResource));
+            });
+        }
     }
 }

@@ -13,33 +13,36 @@ using Volo.Abp.PermissionManagement.Identity;
 using Volo.Abp.PermissionManagement.IdentityServer;
 using Volo.Abp.SettingManagement;
 using Volo.Abp.TenantManagement;
+using EasyAbp.PrivateMessaging;
 
-namespace AddressBook;
-
-[DependsOn(
-    typeof(AddressBookDomainSharedModule),
-    typeof(AbpAuditLoggingDomainModule),
-    typeof(AbpBackgroundJobsDomainModule),
-    typeof(AbpFeatureManagementDomainModule),
-    typeof(AbpIdentityDomainModule),
-    typeof(AbpPermissionManagementDomainIdentityModule),
-    typeof(AbpIdentityServerDomainModule),
-    typeof(AbpPermissionManagementDomainIdentityServerModule),
-    typeof(AbpSettingManagementDomainModule),
-    typeof(AbpTenantManagementDomainModule),
-    typeof(AbpEmailingModule)
-)]
-public class AddressBookDomainModule : AbpModule
+namespace AddressBook
 {
-    public override void ConfigureServices(ServiceConfigurationContext context)
+    [DependsOn(
+        typeof(PrivateMessagingDomainModule),
+        typeof(AddressBookDomainSharedModule),
+        typeof(AbpAuditLoggingDomainModule),
+        typeof(AbpBackgroundJobsDomainModule),
+        typeof(AbpFeatureManagementDomainModule),
+        typeof(AbpIdentityDomainModule),
+        typeof(AbpPermissionManagementDomainIdentityModule),
+        typeof(AbpIdentityServerDomainModule),
+        typeof(AbpPermissionManagementDomainIdentityServerModule),
+        typeof(AbpSettingManagementDomainModule),
+        typeof(AbpTenantManagementDomainModule),
+        typeof(AbpEmailingModule)
+    )]
+    public class AddressBookDomainModule : AbpModule
     {
-        Configure<AbpMultiTenancyOptions>(options =>
+        public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            options.IsEnabled = MultiTenancyConsts.IsEnabled;
-        });
+            Configure<AbpMultiTenancyOptions>(options =>
+            {
+                options.IsEnabled = MultiTenancyConsts.IsEnabled;
+            });
 
 #if DEBUG
-        context.Services.Replace(ServiceDescriptor.Singleton<IEmailSender, NullEmailSender>());
+            context.Services.Replace(ServiceDescriptor.Singleton<IEmailSender, NullEmailSender>());
 #endif
+        }
     }
 }

@@ -1,5 +1,6 @@
 using AddressBook.Contacts;
 using System;
+using EasyAbp.PrivateMessaging.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
@@ -13,42 +14,44 @@ using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 
-namespace AddressBook.EntityFrameworkCore;
-
-[DependsOn(
-    typeof(AddressBookDomainModule),
-    typeof(AbpIdentityEntityFrameworkCoreModule),
-    typeof(AbpIdentityServerEntityFrameworkCoreModule),
-    typeof(AbpPermissionManagementEntityFrameworkCoreModule),
-    typeof(AbpSettingManagementEntityFrameworkCoreModule),
-    typeof(AbpEntityFrameworkCoreSqlServerModule),
-    typeof(AbpBackgroundJobsEntityFrameworkCoreModule),
-    typeof(AbpAuditLoggingEntityFrameworkCoreModule),
-    typeof(AbpTenantManagementEntityFrameworkCoreModule),
-    typeof(AbpFeatureManagementEntityFrameworkCoreModule)
-    )]
-public class AddressBookEntityFrameworkCoreModule : AbpModule
+namespace AddressBook.EntityFrameworkCore
 {
-    public override void PreConfigureServices(ServiceConfigurationContext context)
+    [DependsOn(
+        typeof(PrivateMessagingEntityFrameworkCoreModule),
+        typeof(AddressBookDomainModule),
+        typeof(AbpIdentityEntityFrameworkCoreModule),
+        typeof(AbpIdentityServerEntityFrameworkCoreModule),
+        typeof(AbpPermissionManagementEntityFrameworkCoreModule),
+        typeof(AbpSettingManagementEntityFrameworkCoreModule),
+        typeof(AbpEntityFrameworkCoreSqlServerModule),
+        typeof(AbpBackgroundJobsEntityFrameworkCoreModule),
+        typeof(AbpAuditLoggingEntityFrameworkCoreModule),
+        typeof(AbpTenantManagementEntityFrameworkCoreModule),
+        typeof(AbpFeatureManagementEntityFrameworkCoreModule)
+    )]
+    public class AddressBookEntityFrameworkCoreModule : AbpModule
     {
-        AddressBookEfCoreEntityExtensionMappings.Configure();
-    }
-
-    public override void ConfigureServices(ServiceConfigurationContext context)
-    {
-        context.Services.AddAbpDbContext<AddressBookDbContext>(options =>
+        public override void PreConfigureServices(ServiceConfigurationContext context)
         {
+            AddressBookEfCoreEntityExtensionMappings.Configure();
+        }
+
+        public override void ConfigureServices(ServiceConfigurationContext context)
+        {
+            context.Services.AddAbpDbContext<AddressBookDbContext>(options =>
+            {
                 /* Remove "includeAllEntities: true" to create
                  * default repositories only for aggregate roots */
-            options.AddDefaultRepositories(includeAllEntities: true);
-            options.AddRepository<Contact, ContactRepository>();
-        });
+                options.AddDefaultRepositories(includeAllEntities: true);
+                options.AddRepository<Contact, ContactRepository>();
+            });
 
-        Configure<AbpDbContextOptions>(options =>
-        {
+            Configure<AbpDbContextOptions>(options =>
+            {
                 /* The main point to change your DBMS.
                  * See also AddressBookMigrationsDbContextFactory for EF Core tooling. */
-            options.UseSqlServer();
-        });
+                options.UseSqlServer();
+            });
+        }
     }
 }

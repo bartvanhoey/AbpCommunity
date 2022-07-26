@@ -1,19 +1,20 @@
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
-namespace AddressBook.Contacts;
-
-public static class ContactEfCoreQueryableExtensions
+namespace AddressBook.Contacts
 {
-    public static IQueryable<Contact> IncludeDetails(this IQueryable<Contact> queryable, bool include = true)
+    public static class ContactEfCoreQueryableExtensions
     {
-        if (!include)
+        public static IQueryable<Contact> IncludeDetails(this IQueryable<Contact> queryable, bool include = true)
         {
-            return queryable;
-        }
+            if (!include)
+            {
+                return queryable;
+            }
 
-        return queryable
-            // .Include(x => x.xxx) // TODO: AbpHelper generated
-            ;
+            return queryable
+                // .Include(x => x.xxx) // 
+                ;
+        }
     }
 }

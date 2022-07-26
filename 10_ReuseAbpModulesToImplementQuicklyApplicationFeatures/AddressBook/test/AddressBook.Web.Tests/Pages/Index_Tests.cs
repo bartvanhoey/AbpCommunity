@@ -2,14 +2,15 @@
 using Shouldly;
 using Xunit;
 
-namespace AddressBook.Pages;
-
-public class Index_Tests : AddressBookWebTestBase
+namespace AddressBook.Pages
 {
-    [Fact]
-    public async Task Welcome_Page()
+    public class Index_Tests : AddressBookWebTestBase
     {
-        var response = await GetResponseAsStringAsync("/");
-        response.ShouldNotBeNull();
+        [Fact]
+        public async Task Welcome_Page()
+        {
+            var response = await GetResponseAsStringAsync("/");
+            response.ShouldNotBeNull();
+        }
     }
 }

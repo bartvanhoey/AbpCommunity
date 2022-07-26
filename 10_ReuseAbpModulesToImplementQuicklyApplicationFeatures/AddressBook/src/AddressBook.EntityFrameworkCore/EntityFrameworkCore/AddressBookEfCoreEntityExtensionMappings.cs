@@ -3,19 +3,19 @@ using Volo.Abp.Identity;
 using Volo.Abp.ObjectExtending;
 using Volo.Abp.Threading;
 
-namespace AddressBook.EntityFrameworkCore;
-
-public static class AddressBookEfCoreEntityExtensionMappings
+namespace AddressBook.EntityFrameworkCore
 {
-    private static readonly OneTimeRunner OneTimeRunner = new OneTimeRunner();
-
-    public static void Configure()
+    public static class AddressBookEfCoreEntityExtensionMappings
     {
-        AddressBookGlobalFeatureConfigurator.Configure();
-        AddressBookModuleExtensionConfigurator.Configure();
+        private static readonly OneTimeRunner OneTimeRunner = new OneTimeRunner();
 
-        OneTimeRunner.Run(() =>
+        public static void Configure()
         {
+            AddressBookGlobalFeatureConfigurator.Configure();
+            AddressBookModuleExtensionConfigurator.Configure();
+
+            OneTimeRunner.Run(() =>
+            {
                 /* You can configure extra properties for the
                  * entities defined in the modules used by your application.
                  *
@@ -39,6 +39,7 @@ public static class AddressBookEfCoreEntityExtensionMappings
                  * See the documentation for more:
                  * https://docs.abp.io/en/abp/latest/Customizing-Application-Modules-Extending-Entities
                  */
-        });
+            });
+        }
     }
 }

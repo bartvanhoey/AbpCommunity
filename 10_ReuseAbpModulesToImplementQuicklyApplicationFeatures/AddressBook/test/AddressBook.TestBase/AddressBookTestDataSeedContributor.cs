@@ -2,14 +2,15 @@
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 
-namespace AddressBook;
-
-public class AddressBookTestDataSeedContributor : IDataSeedContributor, ITransientDependency
+namespace AddressBook
 {
-    public Task SeedAsync(DataSeedContext context)
+    public class AddressBookTestDataSeedContributor : IDataSeedContributor, ITransientDependency
     {
-        /* Seed additional test data... */
+        public Task SeedAsync(DataSeedContext context)
+        {
+            /* Seed additional test data... */
 
-        return Task.CompletedTask;
+            return Task.CompletedTask;
+        }
     }
 }

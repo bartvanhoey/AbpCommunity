@@ -4,17 +4,18 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Volo.Abp;
 
-namespace AddressBook;
-
-public class AddressBookWebTestStartup
+namespace AddressBook
 {
-    public void ConfigureServices(IServiceCollection services)
+    public class AddressBookWebTestStartup
     {
-        services.AddApplication<AddressBookWebTestModule>();
-    }
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddApplication<AddressBookWebTestModule>();
+        }
 
-    public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
-    {
-        app.InitializeApplication();
+        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
+        {
+            app.InitializeApplication();
+        }
     }
 }

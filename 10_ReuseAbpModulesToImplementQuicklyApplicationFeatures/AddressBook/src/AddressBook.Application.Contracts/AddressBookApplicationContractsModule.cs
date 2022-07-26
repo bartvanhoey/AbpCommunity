@@ -1,4 +1,5 @@
-﻿using Volo.Abp.Account;
+﻿using EasyAbp.PrivateMessaging;
+using Volo.Abp.Account;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
 using Volo.Abp.Modularity;
@@ -7,22 +8,24 @@ using Volo.Abp.PermissionManagement;
 using Volo.Abp.SettingManagement;
 using Volo.Abp.TenantManagement;
 
-namespace AddressBook;
-
-[DependsOn(
-    typeof(AddressBookDomainSharedModule),
-    typeof(AbpAccountApplicationContractsModule),
-    typeof(AbpFeatureManagementApplicationContractsModule),
-    typeof(AbpIdentityApplicationContractsModule),
-    typeof(AbpPermissionManagementApplicationContractsModule),
-    typeof(AbpSettingManagementApplicationContractsModule),
-    typeof(AbpTenantManagementApplicationContractsModule),
-    typeof(AbpObjectExtendingModule)
-)]
-public class AddressBookApplicationContractsModule : AbpModule
+namespace AddressBook
 {
-    public override void PreConfigureServices(ServiceConfigurationContext context)
+    [DependsOn(
+        typeof(PrivateMessagingApplicationContractsModule),
+        typeof(AddressBookDomainSharedModule),
+        typeof(AbpAccountApplicationContractsModule),
+        typeof(AbpFeatureManagementApplicationContractsModule),
+        typeof(AbpIdentityApplicationContractsModule),
+        typeof(AbpPermissionManagementApplicationContractsModule),
+        typeof(AbpSettingManagementApplicationContractsModule),
+        typeof(AbpTenantManagementApplicationContractsModule),
+        typeof(AbpObjectExtendingModule)
+    )]
+    public class AddressBookApplicationContractsModule : AbpModule
     {
-        AddressBookDtoExtensions.Configure();
+        public override void PreConfigureServices(ServiceConfigurationContext context)
+        {
+            AddressBookDtoExtensions.Configure();
+        }
     }
 }

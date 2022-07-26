@@ -14,55 +14,56 @@ using Volo.Abp.Modularity;
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.Validation.Localization;
 
-namespace AddressBook;
-
-[DependsOn(
-    typeof(AbpAspNetCoreTestBaseModule),
-    typeof(AddressBookWebModule),
-    typeof(AddressBookApplicationTestModule)
-)]
-public class AddressBookWebTestModule : AbpModule
+namespace AddressBook
 {
-    public override void PreConfigureServices(ServiceConfigurationContext context)
+    [DependsOn(
+        typeof(AbpAspNetCoreTestBaseModule),
+        typeof(AddressBookWebModule),
+        typeof(AddressBookApplicationTestModule)
+    )]
+    public class AddressBookWebTestModule : AbpModule
     {
-        context.Services.PreConfigure<IMvcBuilder>(builder =>
+        public override void PreConfigureServices(ServiceConfigurationContext context)
         {
-            builder.PartManager.ApplicationParts.Add(new CompiledRazorAssemblyPart(typeof(AddressBookWebModule).Assembly));
-        });
-    }
+            context.Services.PreConfigure<IMvcBuilder>(builder =>
+            {
+                builder.PartManager.ApplicationParts.Add(new CompiledRazorAssemblyPart(typeof(AddressBookWebModule).Assembly));
+            });
+        }
 
-    public override void ConfigureServices(ServiceConfigurationContext context)
-    {
-        ConfigureLocalizationServices(context.Services);
-        ConfigureNavigationServices(context.Services);
-    }
-
-    private static void ConfigureLocalizationServices(IServiceCollection services)
-    {
-        var cultures = new List<CultureInfo> { new CultureInfo("en"), new CultureInfo("tr") };
-        services.Configure<RequestLocalizationOptions>(options =>
+        public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            options.DefaultRequestCulture = new RequestCulture("en");
-            options.SupportedCultures = cultures;
-            options.SupportedUICultures = cultures;
-        });
+            ConfigureLocalizationServices(context.Services);
+            ConfigureNavigationServices(context.Services);
+        }
 
-        services.Configure<AbpLocalizationOptions>(options =>
+        private static void ConfigureLocalizationServices(IServiceCollection services)
         {
-            options.Resources
-                .Get<AddressBookResource>()
-                .AddBaseTypes(
-                    typeof(AbpValidationResource),
-                    typeof(AbpUiResource)
-                );
-        });
-    }
+            var cultures = new List<CultureInfo> { new CultureInfo("en"), new CultureInfo("tr") };
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = new RequestCulture("en");
+                options.SupportedCultures = cultures;
+                options.SupportedUICultures = cultures;
+            });
 
-    private static void ConfigureNavigationServices(IServiceCollection services)
-    {
-        services.Configure<AbpNavigationOptions>(options =>
+            services.Configure<AbpLocalizationOptions>(options =>
+            {
+                options.Resources
+                    .Get<AddressBookResource>()
+                    .AddBaseTypes(
+                        typeof(AbpValidationResource),
+                        typeof(AbpUiResource)
+                    );
+            });
+        }
+
+        private static void ConfigureNavigationServices(IServiceCollection services)
         {
-            options.MenuContributors.Add(new AddressBookMenuContributor());
-        });
+            services.Configure<AbpNavigationOptions>(options =>
+            {
+                options.MenuContributors.Add(new AddressBookMenuContributor());
+            });
+        }
     }
 }

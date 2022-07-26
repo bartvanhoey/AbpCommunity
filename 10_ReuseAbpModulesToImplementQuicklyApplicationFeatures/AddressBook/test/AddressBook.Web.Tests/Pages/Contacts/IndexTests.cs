@@ -3,21 +3,22 @@ using System.Threading.Tasks;
 using Shouldly;
 using Xunit;
 
-namespace AddressBook.Pages.Contacts;
-
-public class Index_Tests : AddressBookWebTestBase
+namespace AddressBook.Pages.Contacts
 {
-    /*
-    [Fact]
-    public async Task Index_Page_Test()
+    public class Index_Tests : AddressBookWebTestBase
     {
-        // Arrange
-
-        // Act
-        var response = await GetResponseAsStringAsync("/Contact");
-
-        // Assert
-        response.ShouldNotBeNull();
+        /*
+        [Fact]
+        public async Task Index_Page_Test()
+        {
+            // Arrange
+    
+            // Act
+            var response = await GetResponseAsStringAsync("/Contact");
+    
+            // Assert
+            response.ShouldNotBeNull();
+        }
+        */
     }
-    */
 }

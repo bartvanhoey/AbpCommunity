@@ -1,14 +1,15 @@
 ﻿using AddressBook.Localization;
 using Volo.Abp.AspNetCore.Mvc.UI.RazorPages;
 
-namespace AddressBook.Web.Pages;
-
-/* Inherit your PageModel classes from this class.
- */
-public abstract class AddressBookPageModel : AbpPageModel
+namespace AddressBook.Web.Pages
 {
-    protected AddressBookPageModel()
+    /* Inherit your PageModel classes from this class.
+ */
+    public abstract class AddressBookPageModel : AbpPageModel
     {
-        LocalizationResourceType = typeof(AddressBookResource);
+        protected AddressBookPageModel()
+        {
+            LocalizationResourceType = typeof(AddressBookResource);
+        }
     }
 }

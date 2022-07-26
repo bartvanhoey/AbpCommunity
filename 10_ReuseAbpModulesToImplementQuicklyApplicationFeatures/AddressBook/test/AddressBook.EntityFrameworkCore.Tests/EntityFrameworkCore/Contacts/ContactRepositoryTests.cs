@@ -4,29 +4,30 @@ using AddressBook.Contacts;
 using Volo.Abp.Domain.Repositories;
 using Xunit;
 
-namespace AddressBook.EntityFrameworkCore.Contacts;
-
-public class ContactRepositoryTests : AddressBookEntityFrameworkCoreTestBase
+namespace AddressBook.EntityFrameworkCore.Contacts
 {
-    private readonly IContactRepository _contactRepository;
-
-    public ContactRepositoryTests()
+    public class ContactRepositoryTests : AddressBookEntityFrameworkCoreTestBase
     {
-        _contactRepository = GetRequiredService<IContactRepository>();
-    }
+        private readonly IContactRepository _contactRepository;
 
-    /*
-    [Fact]
-    public async Task Test1()
-    {
-        await WithUnitOfWorkAsync(async () =>
+        public ContactRepositoryTests()
         {
-            // Arrange
+            _contactRepository = GetRequiredService<IContactRepository>();
+        }
 
-            // Act
-
-            //Assert
-        });
+        /*
+        [Fact]
+        public async Task Test1()
+        {
+            await WithUnitOfWorkAsync(async () =>
+            {
+                // Arrange
+    
+                // Act
+    
+                //Assert
+            });
+        }
+        */
     }
-    */
 }

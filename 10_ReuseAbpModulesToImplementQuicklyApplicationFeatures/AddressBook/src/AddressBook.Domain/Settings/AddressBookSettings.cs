@@ -1,9 +1,10 @@
-﻿namespace AddressBook.Settings;
-
-public static class AddressBookSettings
+﻿namespace AddressBook.Settings
 {
-    private const string Prefix = "AddressBook";
+    public static class AddressBookSettings
+    {
+        private const string Prefix = "AddressBook";
 
-    //Add your own setting names here. Example:
-    //public const string MySetting1 = Prefix + ".MySetting1";
+        //Add your own setting names here. Example:
+        //public const string MySetting1 = Prefix + ".MySetting1";
+    }
 }

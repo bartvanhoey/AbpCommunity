@@ -1,8 +1,9 @@
 ﻿using System.Threading.Tasks;
 
-namespace AddressBook.Data;
-
-public interface IAddressBookDbSchemaMigrator
+namespace AddressBook.Data
 {
-    Task MigrateAsync();
+    public interface IAddressBookDbSchemaMigrator
+    {
+        Task MigrateAsync();
+    }
 }

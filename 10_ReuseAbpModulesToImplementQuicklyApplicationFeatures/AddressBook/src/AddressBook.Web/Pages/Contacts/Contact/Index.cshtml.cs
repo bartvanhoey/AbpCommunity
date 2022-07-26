@@ -1,11 +1,12 @@
 using System.Threading.Tasks;
 
-namespace AddressBook.Web.Pages.Contacts.Contact;
-
-public class IndexModel : AddressBookPageModel
+namespace AddressBook.Web.Pages.Contacts.Contact
 {
-    public virtual async Task OnGetAsync()
+    public class IndexModel : AddressBookPageModel
     {
-        await Task.CompletedTask;
+        public virtual async Task OnGetAsync()
+        {
+            await Task.CompletedTask;
+        }
     }
 }

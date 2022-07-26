@@ -1,9 +1,10 @@
 ﻿using Volo.Abp.Localization;
 
-namespace AddressBook.Localization;
-
-[LocalizationResourceName("AddressBook")]
-public class AddressBookResource
+namespace AddressBook.Localization
 {
+    [LocalizationResourceName("AddressBook")]
+    public class AddressBookResource
+    {
 
+    }
 }

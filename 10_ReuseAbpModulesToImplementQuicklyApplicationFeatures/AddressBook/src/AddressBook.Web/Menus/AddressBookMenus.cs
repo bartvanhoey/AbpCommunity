@@ -1,11 +1,12 @@
-namespace AddressBook.Web.Menus;
-
-public class AddressBookMenus
+namespace AddressBook.Web.Menus
 {
-    private const string Prefix = "AddressBook";
-    public const string Home = Prefix + ".Home";
+    public class AddressBookMenus
+    {
+        private const string Prefix = "AddressBook";
+        public const string Home = Prefix + ".Home";
 
-    //Add your menu items here...
+        //Add your menu items here...
 
-    public const string Contact = Prefix + ".Contact";
+        public const string Contact = Prefix + ".Contact";
+    }
 }

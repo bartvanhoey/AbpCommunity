@@ -3,17 +3,18 @@ using Volo.Abp.Autofac;
 using Volo.Abp.BackgroundJobs;
 using Volo.Abp.Modularity;
 
-namespace AddressBook.DbMigrator;
-
-[DependsOn(
-    typeof(AbpAutofacModule),
-    typeof(AddressBookEntityFrameworkCoreModule),
-    typeof(AddressBookApplicationContractsModule)
-    )]
-public class AddressBookDbMigratorModule : AbpModule
+namespace AddressBook.DbMigrator
 {
-    public override void ConfigureServices(ServiceConfigurationContext context)
+    [DependsOn(
+        typeof(AbpAutofacModule),
+        typeof(AddressBookEntityFrameworkCoreModule),
+        typeof(AddressBookApplicationContractsModule)
+    )]
+    public class AddressBookDbMigratorModule : AbpModule
     {
-        Configure<AbpBackgroundJobOptions>(options => options.IsJobExecutionEnabled = false);
+        public override void ConfigureServices(ServiceConfigurationContext context)
+        {
+            Configure<AbpBackgroundJobOptions>(options => options.IsJobExecutionEnabled = false);
+        }
     }
 }

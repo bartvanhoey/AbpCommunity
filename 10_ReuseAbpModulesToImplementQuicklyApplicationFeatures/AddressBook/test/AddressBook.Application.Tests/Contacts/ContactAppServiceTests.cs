@@ -2,27 +2,28 @@ using Shouldly;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace AddressBook.Contacts;
-
-public class ContactAppServiceTests : AddressBookApplicationTestBase
+namespace AddressBook.Contacts
 {
-    private readonly IContactAppService _contactAppService;
-
-    public ContactAppServiceTests()
+    public class ContactAppServiceTests : AddressBookApplicationTestBase
     {
-        _contactAppService = GetRequiredService<IContactAppService>();
+        private readonly IContactAppService _contactAppService;
+
+        public ContactAppServiceTests()
+        {
+            _contactAppService = GetRequiredService<IContactAppService>();
+        }
+
+        /*
+        [Fact]
+        public async Task Test1()
+        {
+            // Arrange
+    
+            // Act
+    
+            // Assert
+        }
+        */
     }
-
-    /*
-    [Fact]
-    public async Task Test1()
-    {
-        // Arrange
-
-        // Act
-
-        // Assert
-    }
-    */
 }
 

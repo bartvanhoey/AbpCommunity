@@ -1,6 +1,7 @@
-﻿namespace AddressBook;
-
-public abstract class AddressBookApplicationTestBase : AddressBookTestBase<AddressBookApplicationTestModule>
+﻿namespace AddressBook
 {
+    public abstract class AddressBookApplicationTestBase : AddressBookTestBase<AddressBookApplicationTestModule>
+    {
 
+    }
 }

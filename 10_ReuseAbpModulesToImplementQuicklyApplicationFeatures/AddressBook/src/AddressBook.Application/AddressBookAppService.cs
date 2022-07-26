@@ -4,14 +4,15 @@ using System.Text;
 using AddressBook.Localization;
 using Volo.Abp.Application.Services;
 
-namespace AddressBook;
-
-/* Inherit your application services from this class.
- */
-public abstract class AddressBookAppService : ApplicationService
+namespace AddressBook
 {
-    protected AddressBookAppService()
+    /* Inherit your application services from this class.
+ */
+    public abstract class AddressBookAppService : ApplicationService
     {
-        LocalizationResource = typeof(AddressBookResource);
+        protected AddressBookAppService()
+        {
+            LocalizationResource = typeof(AddressBookResource);
+        }
     }
 }

@@ -5,30 +5,31 @@ using Microsoft.Extensions.DependencyInjection;
 using AddressBook.Data;
 using Volo.Abp.DependencyInjection;
 
-namespace AddressBook.EntityFrameworkCore;
-
-public class EntityFrameworkCoreAddressBookDbSchemaMigrator
-    : IAddressBookDbSchemaMigrator, ITransientDependency
+namespace AddressBook.EntityFrameworkCore
 {
-    private readonly IServiceProvider _serviceProvider;
-
-    public EntityFrameworkCoreAddressBookDbSchemaMigrator(
-        IServiceProvider serviceProvider)
+    public class EntityFrameworkCoreAddressBookDbSchemaMigrator
+        : IAddressBookDbSchemaMigrator, ITransientDependency
     {
-        _serviceProvider = serviceProvider;
-    }
+        private readonly IServiceProvider _serviceProvider;
 
-    public async Task MigrateAsync()
-    {
-        /* We intentionally resolving the AddressBookDbContext
-         * from IServiceProvider (instead of directly injecting it)
-         * to properly get the connection string of the current tenant in the
-         * current scope.
-         */
+        public EntityFrameworkCoreAddressBookDbSchemaMigrator(
+            IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
 
-        await _serviceProvider
-            .GetRequiredService<AddressBookDbContext>()
-            .Database
-            .MigrateAsync();
+        public async Task MigrateAsync()
+        {
+            /* We intentionally resolving the AddressBookDbContext
+             * from IServiceProvider (instead of directly injecting it)
+             * to properly get the connection string of the current tenant in the
+             * current scope.
+             */
+
+            await _serviceProvider
+                .GetRequiredService<AddressBookDbContext>()
+                .Database
+                .MigrateAsync();
+        }
     }
 }

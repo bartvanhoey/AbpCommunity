@@ -1,8 +1,9 @@
-﻿namespace AddressBook;
-
-public static class AddressBookConsts
+﻿namespace AddressBook
 {
-    public const string DbTablePrefix = "App";
+    public static class AddressBookConsts
+    {
+        public const string DbTablePrefix = "App";
 
-    public const string DbSchema = null;
+        public const string DbSchema = null;
+    }
 }

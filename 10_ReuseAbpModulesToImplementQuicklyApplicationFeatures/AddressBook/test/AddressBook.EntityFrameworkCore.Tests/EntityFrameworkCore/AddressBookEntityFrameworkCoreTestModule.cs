@@ -8,54 +8,55 @@ using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore.Sqlite;
 using Volo.Abp.Modularity;
 
-namespace AddressBook.EntityFrameworkCore;
-
-[DependsOn(
-    typeof(AddressBookEntityFrameworkCoreModule),
-    typeof(AddressBookTestBaseModule),
-    typeof(AbpEntityFrameworkCoreSqliteModule)
-    )]
-public class AddressBookEntityFrameworkCoreTestModule : AbpModule
+namespace AddressBook.EntityFrameworkCore
 {
-    private SqliteConnection _sqliteConnection;
-
-    public override void ConfigureServices(ServiceConfigurationContext context)
+    [DependsOn(
+        typeof(AddressBookEntityFrameworkCoreModule),
+        typeof(AddressBookTestBaseModule),
+        typeof(AbpEntityFrameworkCoreSqliteModule)
+    )]
+    public class AddressBookEntityFrameworkCoreTestModule : AbpModule
     {
-        ConfigureInMemorySqlite(context.Services);
-    }
+        private SqliteConnection _sqliteConnection;
 
-    private void ConfigureInMemorySqlite(IServiceCollection services)
-    {
-        _sqliteConnection = CreateDatabaseAndGetConnection();
-
-        services.Configure<AbpDbContextOptions>(options =>
+        public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            options.Configure(context =>
-            {
-                context.DbContextOptions.UseSqlite(_sqliteConnection);
-            });
-        });
-    }
-
-    public override void OnApplicationShutdown(ApplicationShutdownContext context)
-    {
-        _sqliteConnection.Dispose();
-    }
-
-    private static SqliteConnection CreateDatabaseAndGetConnection()
-    {
-        var connection = new SqliteConnection("Data Source=:memory:");
-        connection.Open();
-
-        var options = new DbContextOptionsBuilder<AddressBookDbContext>()
-            .UseSqlite(connection)
-            .Options;
-
-        using (var context = new AddressBookDbContext(options))
-        {
-            context.GetService<IRelationalDatabaseCreator>().CreateTables();
+            ConfigureInMemorySqlite(context.Services);
         }
 
-        return connection;
+        private void ConfigureInMemorySqlite(IServiceCollection services)
+        {
+            _sqliteConnection = CreateDatabaseAndGetConnection();
+
+            services.Configure<AbpDbContextOptions>(options =>
+            {
+                options.Configure(context =>
+                {
+                    context.DbContextOptions.UseSqlite(_sqliteConnection);
+                });
+            });
+        }
+
+        public override void OnApplicationShutdown(ApplicationShutdownContext context)
+        {
+            _sqliteConnection.Dispose();
+        }
+
+        private static SqliteConnection CreateDatabaseAndGetConnection()
+        {
+            var connection = new SqliteConnection("Data Source=:memory:");
+            connection.Open();
+
+            var options = new DbContextOptionsBuilder<AddressBookDbContext>()
+                .UseSqlite(connection)
+                .Options;
+
+            using (var context = new AddressBookDbContext(options))
+            {
+                context.GetService<IRelationalDatabaseCreator>().CreateTables();
+            }
+
+            return connection;
+        }
     }
 }

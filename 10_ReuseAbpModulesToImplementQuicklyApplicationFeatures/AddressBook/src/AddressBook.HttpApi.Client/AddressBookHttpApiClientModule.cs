@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using EasyAbp.PrivateMessaging;
+using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Account;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
@@ -8,31 +9,33 @@ using Volo.Abp.TenantManagement;
 using Volo.Abp.SettingManagement;
 using Volo.Abp.VirtualFileSystem;
 
-namespace AddressBook;
-
-[DependsOn(
-    typeof(AddressBookApplicationContractsModule),
-    typeof(AbpAccountHttpApiClientModule),
-    typeof(AbpIdentityHttpApiClientModule),
-    typeof(AbpPermissionManagementHttpApiClientModule),
-    typeof(AbpTenantManagementHttpApiClientModule),
-    typeof(AbpFeatureManagementHttpApiClientModule),
-    typeof(AbpSettingManagementHttpApiClientModule)
-)]
-public class AddressBookHttpApiClientModule : AbpModule
+namespace AddressBook
 {
-    public const string RemoteServiceName = "Default";
-
-    public override void ConfigureServices(ServiceConfigurationContext context)
+    [DependsOn(
+        typeof(PrivateMessagingHttpApiClientModule),
+        typeof(AddressBookApplicationContractsModule),
+        typeof(AbpAccountHttpApiClientModule),
+        typeof(AbpIdentityHttpApiClientModule),
+        typeof(AbpPermissionManagementHttpApiClientModule),
+        typeof(AbpTenantManagementHttpApiClientModule),
+        typeof(AbpFeatureManagementHttpApiClientModule),
+        typeof(AbpSettingManagementHttpApiClientModule)
+    )]
+    public class AddressBookHttpApiClientModule : AbpModule
     {
-        context.Services.AddHttpClientProxies(
-            typeof(AddressBookApplicationContractsModule).Assembly,
-            RemoteServiceName
-        );
+        public const string RemoteServiceName = "Default";
 
-        Configure<AbpVirtualFileSystemOptions>(options =>
+        public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            options.FileSets.AddEmbedded<AddressBookHttpApiClientModule>();
-        });
+            context.Services.AddHttpClientProxies(
+                typeof(AddressBookApplicationContractsModule).Assembly,
+                RemoteServiceName
+            );
+
+            Configure<AbpVirtualFileSystemOptions>(options =>
+            {
+                options.FileSets.AddEmbedded<AddressBookHttpApiClientModule>();
+            });
+        }
     }
 }

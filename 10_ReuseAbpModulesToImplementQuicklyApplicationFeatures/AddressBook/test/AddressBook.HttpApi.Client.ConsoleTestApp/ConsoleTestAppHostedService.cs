@@ -5,36 +5,37 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
 
-namespace AddressBook.HttpApi.Client.ConsoleTestApp;
-
-public class ConsoleTestAppHostedService : IHostedService
+namespace AddressBook.HttpApi.Client.ConsoleTestApp
 {
-    private readonly IConfiguration _configuration;
-
-    public ConsoleTestAppHostedService(IConfiguration configuration)
+    public class ConsoleTestAppHostedService : IHostedService
     {
-        _configuration = configuration;
-    }
+        private readonly IConfiguration _configuration;
 
-    public async Task StartAsync(CancellationToken cancellationToken)
-    {
-        using (var application = await AbpApplicationFactory.CreateAsync<AddressBookConsoleApiClientModule>(options =>
+        public ConsoleTestAppHostedService(IConfiguration configuration)
         {
-           options.Services.ReplaceConfiguration(_configuration);
-           options.UseAutofac();
-        }))
-        {
-            await application.InitializeAsync();
-
-            var demo = application.ServiceProvider.GetRequiredService<ClientDemoService>();
-            await demo.RunAsync();
-
-            await application.ShutdownAsync();
+            _configuration = configuration;
         }
-    }
 
-    public Task StopAsync(CancellationToken cancellationToken)
-    {
-        return Task.CompletedTask;
+        public async Task StartAsync(CancellationToken cancellationToken)
+        {
+            using (var application = await AbpApplicationFactory.CreateAsync<AddressBookConsoleApiClientModule>(options =>
+                   {
+                       options.Services.ReplaceConfiguration(_configuration);
+                       options.UseAutofac();
+                   }))
+            {
+                await application.InitializeAsync();
+
+                var demo = application.ServiceProvider.GetRequiredService<ClientDemoService>();
+                await demo.RunAsync();
+
+                await application.ShutdownAsync();
+            }
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
     }
 }

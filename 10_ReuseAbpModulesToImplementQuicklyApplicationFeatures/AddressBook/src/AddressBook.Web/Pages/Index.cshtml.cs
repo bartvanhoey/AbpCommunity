@@ -1,9 +1,10 @@
-﻿namespace AddressBook.Web.Pages;
-
-public class IndexModel : AddressBookPageModel
+﻿namespace AddressBook.Web.Pages
 {
-    public void OnGet()
+    public class IndexModel : AddressBookPageModel
     {
+        public void OnGet()
+        {
 
+        }
     }
 }

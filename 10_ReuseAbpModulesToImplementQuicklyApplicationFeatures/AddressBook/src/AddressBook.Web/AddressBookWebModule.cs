@@ -10,6 +10,7 @@ using AddressBook.EntityFrameworkCore;
 using AddressBook.Localization;
 using AddressBook.MultiTenancy;
 using AddressBook.Web.Menus;
+using EasyAbp.PrivateMessaging.Web;
 using Microsoft.OpenApi.Models;
 using Volo.Abp;
 using Volo.Abp.Account.Web;
@@ -39,205 +40,207 @@ using Volo.Abp.UI;
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.VirtualFileSystem;
 
-namespace AddressBook.Web;
-
-[DependsOn(
-    typeof(AddressBookHttpApiModule),
-    typeof(AddressBookApplicationModule),
-    typeof(AddressBookEntityFrameworkCoreModule),
-    typeof(AbpAutofacModule),
-    typeof(AbpIdentityWebModule),
-    typeof(AbpSettingManagementWebModule),
-    typeof(AbpAccountWebIdentityServerModule),
-    typeof(AbpAspNetCoreMvcUiBasicThemeModule),
-    typeof(AbpAspNetCoreAuthenticationJwtBearerModule),
-    typeof(AbpTenantManagementWebModule),
-    typeof(AbpAspNetCoreSerilogModule),
-    typeof(AbpSwashbuckleModule)
-    )]
-public class AddressBookWebModule : AbpModule
+namespace AddressBook.Web
 {
-    public override void PreConfigureServices(ServiceConfigurationContext context)
+    [DependsOn(
+        typeof(PrivateMessagingWebModule),
+        typeof(AddressBookHttpApiModule),
+        typeof(AddressBookApplicationModule),
+        typeof(AddressBookEntityFrameworkCoreModule),
+        typeof(AbpAutofacModule),
+        typeof(AbpIdentityWebModule),
+        typeof(AbpSettingManagementWebModule),
+        typeof(AbpAccountWebIdentityServerModule),
+        typeof(AbpAspNetCoreMvcUiBasicThemeModule),
+        typeof(AbpAspNetCoreAuthenticationJwtBearerModule),
+        typeof(AbpTenantManagementWebModule),
+        typeof(AbpAspNetCoreSerilogModule),
+        typeof(AbpSwashbuckleModule)
+    )]
+    public class AddressBookWebModule : AbpModule
     {
-        context.Services.PreConfigure<AbpMvcDataAnnotationsLocalizationOptions>(options =>
+        public override void PreConfigureServices(ServiceConfigurationContext context)
         {
-            options.AddAssemblyResource(
-                typeof(AddressBookResource),
-                typeof(AddressBookDomainModule).Assembly,
-                typeof(AddressBookDomainSharedModule).Assembly,
-                typeof(AddressBookApplicationModule).Assembly,
-                typeof(AddressBookApplicationContractsModule).Assembly,
-                typeof(AddressBookWebModule).Assembly
-            );
-        });
-    }
+            context.Services.PreConfigure<AbpMvcDataAnnotationsLocalizationOptions>(options =>
+            {
+                options.AddAssemblyResource(
+                    typeof(AddressBookResource),
+                    typeof(AddressBookDomainModule).Assembly,
+                    typeof(AddressBookDomainSharedModule).Assembly,
+                    typeof(AddressBookApplicationModule).Assembly,
+                    typeof(AddressBookApplicationContractsModule).Assembly,
+                    typeof(AddressBookWebModule).Assembly
+                );
+            });
+        }
 
-    public override void ConfigureServices(ServiceConfigurationContext context)
-    {
-        var hostingEnvironment = context.Services.GetHostingEnvironment();
-        var configuration = context.Services.GetConfiguration();
-
-        ConfigureUrls(configuration);
-        ConfigureBundles();
-        ConfigureAuthentication(context, configuration);
-        ConfigureAutoMapper();
-        ConfigureVirtualFileSystem(hostingEnvironment);
-        ConfigureLocalizationServices();
-        ConfigureNavigationServices();
-        ConfigureAutoApiControllers();
-        ConfigureSwaggerServices(context.Services);
-    }
-
-    private void ConfigureUrls(IConfiguration configuration)
-    {
-        Configure<AppUrlOptions>(options =>
+        public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            options.Applications["MVC"].RootUrl = configuration["App:SelfUrl"];
-        });
-    }
+            var hostingEnvironment = context.Services.GetHostingEnvironment();
+            var configuration = context.Services.GetConfiguration();
 
-    private void ConfigureBundles()
-    {
-        Configure<AbpBundlingOptions>(options =>
+            ConfigureUrls(configuration);
+            ConfigureBundles();
+            ConfigureAuthentication(context, configuration);
+            ConfigureAutoMapper();
+            ConfigureVirtualFileSystem(hostingEnvironment);
+            ConfigureLocalizationServices();
+            ConfigureNavigationServices();
+            ConfigureAutoApiControllers();
+            ConfigureSwaggerServices(context.Services);
+        }
+
+        private void ConfigureUrls(IConfiguration configuration)
         {
-            options.StyleBundles.Configure(
-                BasicThemeBundles.Styles.Global,
-                bundle =>
+            Configure<AppUrlOptions>(options =>
+            {
+                options.Applications["MVC"].RootUrl = configuration["App:SelfUrl"];
+            });
+        }
+
+        private void ConfigureBundles()
+        {
+            Configure<AbpBundlingOptions>(options =>
+            {
+                options.StyleBundles.Configure(
+                    BasicThemeBundles.Styles.Global,
+                    bundle =>
+                    {
+                        bundle.AddFiles("/global-styles.css");
+                    }
+                );
+            });
+        }
+
+        private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration)
+        {
+            context.Services.AddAuthentication()
+                .AddJwtBearer(options =>
                 {
-                    bundle.AddFiles("/global-styles.css");
+                    options.Authority = configuration["AuthServer:Authority"];
+                    options.RequireHttpsMetadata = Convert.ToBoolean(configuration["AuthServer:RequireHttpsMetadata"]);
+                    options.Audience = "AddressBook";
+                });
+
+            context.Services.ForwardIdentityAuthenticationForBearer();
+        }
+
+        private void ConfigureAutoMapper()
+        {
+            Configure<AbpAutoMapperOptions>(options =>
+            {
+                options.AddMaps<AddressBookWebModule>();
+            });
+        }
+
+        private void ConfigureVirtualFileSystem(IWebHostEnvironment hostingEnvironment)
+        {
+            if (hostingEnvironment.IsDevelopment())
+            {
+                Configure<AbpVirtualFileSystemOptions>(options =>
+                {
+                    options.FileSets.ReplaceEmbeddedByPhysical<AddressBookDomainSharedModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}AddressBook.Domain.Shared"));
+                    options.FileSets.ReplaceEmbeddedByPhysical<AddressBookDomainModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}AddressBook.Domain"));
+                    options.FileSets.ReplaceEmbeddedByPhysical<AddressBookApplicationContractsModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}AddressBook.Application.Contracts"));
+                    options.FileSets.ReplaceEmbeddedByPhysical<AddressBookApplicationModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}AddressBook.Application"));
+                    options.FileSets.ReplaceEmbeddedByPhysical<AddressBookWebModule>(hostingEnvironment.ContentRootPath);
+                });
+            }
+        }
+
+        private void ConfigureLocalizationServices()
+        {
+            Configure<AbpLocalizationOptions>(options =>
+            {
+                options.Languages.Add(new LanguageInfo("ar", "ar", "العربية"));
+                options.Languages.Add(new LanguageInfo("cs", "cs", "Čeština"));
+                options.Languages.Add(new LanguageInfo("en", "en", "English"));
+                options.Languages.Add(new LanguageInfo("en-GB", "en-GB", "English (UK)"));
+                options.Languages.Add(new LanguageInfo("hu", "hu", "Magyar"));
+                options.Languages.Add(new LanguageInfo("fi", "fi", "Finnish"));
+                options.Languages.Add(new LanguageInfo("fr", "fr", "Français"));
+                options.Languages.Add(new LanguageInfo("hi", "hi", "Hindi", "in"));
+                options.Languages.Add(new LanguageInfo("is", "is", "Icelandic", "is"));
+                options.Languages.Add(new LanguageInfo("it", "it", "Italiano", "it"));
+                options.Languages.Add(new LanguageInfo("pt-BR", "pt-BR", "Português"));
+                options.Languages.Add(new LanguageInfo("ro-RO", "ro-RO", "Română"));
+                options.Languages.Add(new LanguageInfo("ru", "ru", "Русский"));
+                options.Languages.Add(new LanguageInfo("sk", "sk", "Slovak"));
+                options.Languages.Add(new LanguageInfo("tr", "tr", "Türkçe"));
+                options.Languages.Add(new LanguageInfo("zh-Hans", "zh-Hans", "简体中文"));
+                options.Languages.Add(new LanguageInfo("zh-Hant", "zh-Hant", "繁體中文"));
+                options.Languages.Add(new LanguageInfo("de-DE", "de-DE", "Deutsch", "de"));
+                options.Languages.Add(new LanguageInfo("es", "es", "Español"));
+            });
+        }
+
+        private void ConfigureNavigationServices()
+        {
+            Configure<AbpNavigationOptions>(options =>
+            {
+                options.MenuContributors.Add(new AddressBookMenuContributor());
+            });
+        }
+
+        private void ConfigureAutoApiControllers()
+        {
+            Configure<AbpAspNetCoreMvcOptions>(options =>
+            {
+                options.ConventionalControllers.Create(typeof(AddressBookApplicationModule).Assembly);
+            });
+        }
+
+        private void ConfigureSwaggerServices(IServiceCollection services)
+        {
+            services.AddAbpSwaggerGen(
+                options =>
+                {
+                    options.SwaggerDoc("v1", new OpenApiInfo { Title = "AddressBook API", Version = "v1" });
+                    options.DocInclusionPredicate((docName, description) => true);
+                    options.CustomSchemaIds(type => type.FullName);
                 }
             );
-        });
-    }
-
-    private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration)
-    {
-        context.Services.AddAuthentication()
-            .AddJwtBearer(options =>
-            {
-                options.Authority = configuration["AuthServer:Authority"];
-                options.RequireHttpsMetadata = Convert.ToBoolean(configuration["AuthServer:RequireHttpsMetadata"]);
-                options.Audience = "AddressBook";
-            });
-
-        context.Services.ForwardIdentityAuthenticationForBearer();
-    }
-
-    private void ConfigureAutoMapper()
-    {
-        Configure<AbpAutoMapperOptions>(options =>
-        {
-            options.AddMaps<AddressBookWebModule>();
-        });
-    }
-
-    private void ConfigureVirtualFileSystem(IWebHostEnvironment hostingEnvironment)
-    {
-        if (hostingEnvironment.IsDevelopment())
-        {
-            Configure<AbpVirtualFileSystemOptions>(options =>
-            {
-                    options.FileSets.ReplaceEmbeddedByPhysical<AddressBookDomainSharedModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}AddressBook.Domain.Shared"));
-                options.FileSets.ReplaceEmbeddedByPhysical<AddressBookDomainModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}AddressBook.Domain"));
-                options.FileSets.ReplaceEmbeddedByPhysical<AddressBookApplicationContractsModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}AddressBook.Application.Contracts"));
-                options.FileSets.ReplaceEmbeddedByPhysical<AddressBookApplicationModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}AddressBook.Application"));
-                options.FileSets.ReplaceEmbeddedByPhysical<AddressBookWebModule>(hostingEnvironment.ContentRootPath);
-            });
         }
-    }
 
-    private void ConfigureLocalizationServices()
-    {
-        Configure<AbpLocalizationOptions>(options =>
+        public override void OnApplicationInitialization(ApplicationInitializationContext context)
         {
-            options.Languages.Add(new LanguageInfo("ar", "ar", "العربية"));
-            options.Languages.Add(new LanguageInfo("cs", "cs", "Čeština"));
-            options.Languages.Add(new LanguageInfo("en", "en", "English"));
-            options.Languages.Add(new LanguageInfo("en-GB", "en-GB", "English (UK)"));
-            options.Languages.Add(new LanguageInfo("hu", "hu", "Magyar"));
-            options.Languages.Add(new LanguageInfo("fi", "fi", "Finnish"));
-            options.Languages.Add(new LanguageInfo("fr", "fr", "Français"));
-            options.Languages.Add(new LanguageInfo("hi", "hi", "Hindi", "in"));
-            options.Languages.Add(new LanguageInfo("is", "is", "Icelandic", "is"));
-            options.Languages.Add(new LanguageInfo("it", "it", "Italiano", "it"));
-            options.Languages.Add(new LanguageInfo("pt-BR", "pt-BR", "Português"));
-            options.Languages.Add(new LanguageInfo("ro-RO", "ro-RO", "Română"));
-            options.Languages.Add(new LanguageInfo("ru", "ru", "Русский"));
-            options.Languages.Add(new LanguageInfo("sk", "sk", "Slovak"));
-            options.Languages.Add(new LanguageInfo("tr", "tr", "Türkçe"));
-            options.Languages.Add(new LanguageInfo("zh-Hans", "zh-Hans", "简体中文"));
-            options.Languages.Add(new LanguageInfo("zh-Hant", "zh-Hant", "繁體中文"));
-            options.Languages.Add(new LanguageInfo("de-DE", "de-DE", "Deutsch", "de"));
-            options.Languages.Add(new LanguageInfo("es", "es", "Español"));
-        });
-    }
+            var app = context.GetApplicationBuilder();
+            var env = context.GetEnvironment();
 
-    private void ConfigureNavigationServices()
-    {
-        Configure<AbpNavigationOptions>(options =>
-        {
-            options.MenuContributors.Add(new AddressBookMenuContributor());
-        });
-    }
-
-    private void ConfigureAutoApiControllers()
-    {
-        Configure<AbpAspNetCoreMvcOptions>(options =>
-        {
-            options.ConventionalControllers.Create(typeof(AddressBookApplicationModule).Assembly);
-        });
-    }
-
-    private void ConfigureSwaggerServices(IServiceCollection services)
-    {
-        services.AddAbpSwaggerGen(
-            options =>
+            if (env.IsDevelopment())
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "AddressBook API", Version = "v1" });
-                options.DocInclusionPredicate((docName, description) => true);
-                options.CustomSchemaIds(type => type.FullName);
+                app.UseDeveloperExceptionPage();
             }
-        );
-    }
 
-    public override void OnApplicationInitialization(ApplicationInitializationContext context)
-    {
-        var app = context.GetApplicationBuilder();
-        var env = context.GetEnvironment();
+            app.UseAbpRequestLocalization();
 
-        if (env.IsDevelopment())
-        {
-            app.UseDeveloperExceptionPage();
+            if (!env.IsDevelopment())
+            {
+                app.UseErrorPage();
+            }
+
+            app.UseCorrelationId();
+            app.UseStaticFiles();
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseJwtTokenMiddleware();
+
+            if (MultiTenancyConsts.IsEnabled)
+            {
+                app.UseMultiTenancy();
+            }
+
+            app.UseUnitOfWork();
+            app.UseIdentityServer();
+            app.UseAuthorization();
+            app.UseSwagger();
+            app.UseAbpSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "AddressBook API");
+            });
+            app.UseAuditing();
+            app.UseAbpSerilogEnrichers();
+            app.UseConfiguredEndpoints();
         }
-
-        app.UseAbpRequestLocalization();
-
-        if (!env.IsDevelopment())
-        {
-            app.UseErrorPage();
-        }
-
-        app.UseCorrelationId();
-        app.UseStaticFiles();
-        app.UseRouting();
-        app.UseAuthentication();
-        app.UseJwtTokenMiddleware();
-
-        if (MultiTenancyConsts.IsEnabled)
-        {
-            app.UseMultiTenancy();
-        }
-
-        app.UseUnitOfWork();
-        app.UseIdentityServer();
-        app.UseAuthorization();
-        app.UseSwagger();
-        app.UseAbpSwaggerUI(options =>
-        {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "AddressBook API");
-        });
-        app.UseAuditing();
-        app.UseAbpSerilogEnrichers();
-        app.UseConfiguredEndpoints();
     }
 }
