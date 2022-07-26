@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using CustomizeUserDemo.Domain.Shared.Identity;
 using Volo.Abp.Identity;
 using Volo.Abp.ObjectExtending;
 using Volo.Abp.Threading;
@@ -54,11 +55,11 @@ public static class CustomizeUserDemoModuleExtensionConfigurator
                           "SocialSecurityNumber", //property name
                           property =>
                           {
-                              //validation rules
+                              validation rules
                               property.Attributes.Add(new RequiredAttribute());
                               property.Attributes.Add(new StringLengthAttribute(64) {MinimumLength = 4});
 
-                              //...other configurations for this property
+                              ...other configurations for this property
                           }
                       );
                   });
@@ -67,5 +68,31 @@ public static class CustomizeUserDemoModuleExtensionConfigurator
          * See the documentation for more:
          * https://docs.abp.io/en/abp/latest/Module-Entity-Extensions
          */
+
+
+           ObjectExtensionManager.Instance.Modules()
+              .ConfigureIdentity(identity =>
+              {
+                  identity.ConfigureUser(user =>
+                  {
+                      user.AddOrUpdateProperty<string>( //property type: string
+                          UserConsts.TitlePropertyName, //property name
+                          property =>
+                          {
+                              property.Attributes.Add(new RequiredAttribute());
+                              property.Attributes.Add(new StringLengthAttribute(UserConsts.MaxTitleLength));
+                          }
+                      );
+                      user.AddOrUpdateProperty<int>(
+                        UserConsts.ReputationPropertyName,
+                        property => { 
+                                property.DefaultValue = UserConsts.MinReputationValue;
+                                property.Attributes.Add(new RangeAttribute(UserConsts.MinReputationValue, UserConsts.MaxReputationValue));
+                        }
+                      );
+                  });
+              });
+
+
     }
 }
