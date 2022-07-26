@@ -3,6 +3,21 @@
   "texts": {
     "Menu:Home": "Acasă",
     "Welcome": "Bun venit",
-    "LongWelcomeMessage": "Bun venit la aplicaţie. Acesta este un proiect de pornire bazat pe framework-ul ABP. Pentru mai multe informaţii, vizitaţi, visit abp.io."
+    "LongWelcomeMessage": "Bun venit la aplicaţie. Acesta este un proiect de pornire bazat pe framework-ul ABP. Pentru mai multe informaţii, vizitaţi, visit abp.io.",
+    "Permission:Contact": "Contact",
+    "Permission:Create": "Create",
+    "Permission:Update": "Update",
+    "Permission:Delete": "Delete",
+    "Menu:Contact": "MenuContact",
+    "Contact": "Contact",
+    "ContactName": "ContactName",
+    "ContactPhoneNumber": "ContactPhoneNumber",
+    "ContactAddress": "ContactAddress",
+    "ContactAge": "ContactAge",
+    "ContactBirthDay": "ContactBirthDay",
+    "CreateContact": "CreateContact",
+    "EditContact": "EditContact",
+    "ContactDeletionConfirmationMessage": "Are you sure to delete the contact {0}?",
+    "SuccessfullyDeleted": "Successfully deleted"
   }
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.Data;
@@ -12,6 +12,8 @@ using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
+using AddressBook.Contacts;
+using Volo.Abp.EntityFrameworkCore.Modeling;
 
 namespace AddressBook.EntityFrameworkCore;
 
@@ -51,6 +53,7 @@ public class AddressBookDbContext :
     public DbSet<TenantConnectionString> TenantConnectionStrings { get; set; }
 
     #endregion
+    public DbSet<Contact> Contacts { get; set; }
 
     public AddressBookDbContext(DbContextOptions<AddressBookDbContext> options)
         : base(options)
@@ -81,5 +84,15 @@ public class AddressBookDbContext :
         //    b.ConfigureByConvention(); //auto configure for the base class props
         //    //...
         //});
+
+
+        builder.Entity<Contact>(b =>
+        {
+            b.ToTable(AddressBookConsts.DbTablePrefix + "Contacts", AddressBookConsts.DbSchema);
+            b.ConfigureByConvention(); 
+            
+
+            /* Configure more properties here */
+        });
     }
 }

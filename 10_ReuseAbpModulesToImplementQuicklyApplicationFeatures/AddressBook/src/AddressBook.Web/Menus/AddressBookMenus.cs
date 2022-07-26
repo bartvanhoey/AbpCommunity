@@ -1,4 +1,4 @@
-﻿namespace AddressBook.Web.Menus;
+namespace AddressBook.Web.Menus;
 
 public class AddressBookMenus
 {
@@ -7,4 +7,5 @@ public class AddressBookMenus
 
     //Add your menu items here...
 
+    public const string Contact = Prefix + ".Contact";
 }

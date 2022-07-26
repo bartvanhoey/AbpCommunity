@@ -3,6 +3,21 @@
   "texts": {
     "Menu:Home": "Heim",
     "Welcome": "Velkomin",
-    "LongWelcomeMessage": "Verið velkomin í forritið. Þetta er startup verkefni sem byggir á ABP. Nánari upplýsingar er að finna á abp.io."
+    "LongWelcomeMessage": "Verið velkomin í forritið. Þetta er startup verkefni sem byggir á ABP. Nánari upplýsingar er að finna á abp.io.",
+    "Permission:Contact": "Contact",
+    "Permission:Create": "Create",
+    "Permission:Update": "Update",
+    "Permission:Delete": "Delete",
+    "Menu:Contact": "MenuContact",
+    "Contact": "Contact",
+    "ContactName": "ContactName",
+    "ContactPhoneNumber": "ContactPhoneNumber",
+    "ContactAddress": "ContactAddress",
+    "ContactAge": "ContactAge",
+    "ContactBirthDay": "ContactBirthDay",
+    "CreateContact": "CreateContact",
+    "EditContact": "EditContact",
+    "ContactDeletionConfirmationMessage": "Are you sure to delete the contact {0}?",
+    "SuccessfullyDeleted": "Successfully deleted"
   }
 }

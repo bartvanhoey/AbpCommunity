@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
+using AddressBook.Permissions;
 using AddressBook.Localization;
 using AddressBook.MultiTenancy;
 using Volo.Abp.Identity.Web.Navigation;
@@ -45,5 +46,11 @@ public class AddressBookMenuContributor : IMenuContributor
 
         administration.SetSubItemOrder(IdentityMenuNames.GroupName, 2);
         administration.SetSubItemOrder(SettingManagementMenuNames.GroupName, 3);
+        if (await context.IsGrantedAsync(AddressBookPermissions.Contact.Default))
+        {
+            context.Menu.AddItem(
+                new ApplicationMenuItem(AddressBookMenus.Contact, l["Menu:Contact"], "/Contacts/Contact")
+            );
+        }
     }
 }

@@ -3,6 +3,21 @@
   "texts": {
     "Menu:Home": "Úvod",
     "Welcome": "Vítejte",
-    "LongWelcomeMessage": "Vítejte v aplikaci. Toto je startovací projekt založený na ABP frameworku. Pro více informací, navštivte abp.io."
+    "LongWelcomeMessage": "Vítejte v aplikaci. Toto je startovací projekt založený na ABP frameworku. Pro více informací, navštivte abp.io.",
+    "Permission:Contact": "Contact",
+    "Permission:Create": "Create",
+    "Permission:Update": "Update",
+    "Permission:Delete": "Delete",
+    "Menu:Contact": "MenuContact",
+    "Contact": "Contact",
+    "ContactName": "ContactName",
+    "ContactPhoneNumber": "ContactPhoneNumber",
+    "ContactAddress": "ContactAddress",
+    "ContactAge": "ContactAge",
+    "ContactBirthDay": "ContactBirthDay",
+    "CreateContact": "CreateContact",
+    "EditContact": "EditContact",
+    "ContactDeletionConfirmationMessage": "Are you sure to delete the contact {0}?",
+    "SuccessfullyDeleted": "Successfully deleted"
   }
 }
