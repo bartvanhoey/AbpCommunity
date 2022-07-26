@@ -17,8 +17,7 @@ public class ContactAppService : CrudAppService<Contact, ContactDto, Guid, Paged
 
     private readonly IContactRepository _repository;
 
-    public ContactAppService(IContactRepository repository) : base(repository)
-    {
-        _repository = repository;
-    }
+    public ContactAppService(IContactRepository repository) : base(repository) => _repository = repository;
+
+
 }
